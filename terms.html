@@ -1,0 +1,272 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Terms and Conditions for Incredibles Removals, outlining the terms of service for our removal and relocation services.">
+    <title>Terms & Conditions - Incredibles Removals</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        a, button {
+            -webkit-tap-highlight-color: transparent;
+        }
+        a:focus, button:focus {
+            outline: 2px solid #f97316;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const Navbar = () => {
+            const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+            const menuRef = React.useRef(null);
+
+            React.useEffect(() => {
+                const handleOutsideClick = (e) => {
+                    if (isMenuOpen && menuRef.current && !menuRef.current.contains(e.target)) {
+                        setIsMenuOpen(false);
+                    }
+                };
+                const handleEscapeKey = (e) => {
+                    if (e.key === 'Escape' && isMenuOpen) {
+                        setIsMenuOpen(false);
+                    }
+                };
+                document.addEventListener('click', handleOutsideClick);
+                document.addEventListener('keydown', handleEscapeKey);
+                return () => {
+                    document.removeEventListener('click', handleOutsideClick);
+                    document.removeEventListener('keydown', handleEscapeKey);
+                };
+            }, [isMenuOpen]);
+
+            return (
+                <nav ref={menuRef} className="bg-orange-600 text-white p-4 sticky top-0 z-50 shadow-md">
+                    <div className="container mx-auto flex justify-between items-center">
+                        <div className="flex items-center">
+                            <img 
+                                src="https://lh3.googleusercontent.com/t0lwMOX77yCD_0HGZNLxmrPFl8GkkG-rd1wwrahGPXdRolX5VEW8jWQPbPGIWN95jgW__n1JcAoyQy81=s265-w265-h265" 
+                                alt="Incredibles Removals Logo" 
+                                className="h-12 w-auto"
+                            />
+                        </div>
+                        <ul className="hidden md:flex space-x-6">
+                            <li><a href="index.html#home" className="hover:text-orange-200 transition-colors">Home</a></li>
+                            <li><a href="index.html#services" className="hover:text-orange-200 transition-colors">Services</a></li>
+                            <li><a href="index.html#about" className="hover:text-orange-200 transition-colors">About</a></li>
+                            <li><a href="index.html#testimonials" className="hover:text-orange-200 transition-colors">Testimonials</a></li>
+                            <li><a href="index.html#contact" className="hover:text-orange-200 transition-colors">Contact</a></li>
+                        </ul>
+                        <button 
+                            className="md:hidden text-white focus:outline-none"
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            aria-label="Toggle menu"
+                            aria-expanded={isMenuOpen}
+                        >
+                            <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-2xl`}></i>
+                        </button>
+                    </div>
+                    <div className={`mobile-menu bg-orange-700 md:hidden ${isMenuOpen ? 'open' : ''}`}>
+                        <ul className="flex flex-col space-y-3 p-4">
+                            <li><a href="index.html#home" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
+                            <li><a href="index.html#services" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Services</a></li>
+                            <li><a href="index.html#about" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
+                            <li><a href="index.html#testimonials" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Testimonials</a></li>
+                            <li><a href="index.html#contact" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            );
+        };
+
+        const TermsConditions = () => (
+            <section className="py-16 bg-white">
+                <div className="container mx-auto px-4">
+                    <div className="max-w-4xl mx-auto">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Terms & Conditions</h1>
+                        <p className="text-lg text-gray-600 mb-6">Last Updated: April 20, 2025</p>
+                        <p className="text-lg text-gray-600 mb-6">
+                            These Terms and Conditions govern the use of services provided by Incredibles Removals. By booking our services, you agree to be bound by these terms.
+                        </p>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">1. Services</h2>
+                        <p className="text-lg text-gray-600 mb-6">
+                            Incredibles Removals provides residential and commercial removal services, including packing, transportation, unpacking, and storage solutions. Services are subject to availability and must be booked in advance.
+                        </p>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">2. Bookings and Payments</h2>
+                        <p className="text-lg text-gray-600 mb-4">
+                            <ul className="list-disc pl-6 text-lg text-gray-600 mb-6">
+                                <li>A deposit may be required to confirm your booking.</li>
+                                <li>Full payment is due upon completion of the service unless otherwise agreed.</li>
+                                <li>Cancellations within 48 hours of the scheduled service may incur a cancellation fee.</li>
+                                <li>Quotes are valid for 30 days and subject to change based on additional requirements.</li>
+                            </ul>
+                        </p>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">3. Client Responsibilities</h2>
+                        <p className="text-lg text-gray-600 mb-4">
+                            You agree to:
+                        </p>
+                        <ul className="list-disc pl-6 text-lg text-gray-600 mb-6">
+                            <li>Provide accurate information about the items to be moved.</li>
+                            <li>Ensure safe access to pickup and drop-off locations.</li>
+                            <li>Declare any hazardous or prohibited items.</li>
+                            <li>Secure parking permits if required.</li>
+                        </ul>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">4. Liability and Insurance</h2>
+                        <p className="text-lg text-gray-600 mb-6">
+                            Incredibles Removals is insured for goods in transit. However:
+                        </p>
+                        <ul className="list-disc pl-6 text-lg text-gray-600 mb-6">
+                            <li>We are not liable for damage to items packed by the client unless caused by our negligence.</li>
+                            <li>Claims for loss or damage must be reported within 7 days of service completion.</li>
+                            <li>We are not responsible for delays due to unforeseen circumstances (e.g., traffic, weather).</li>
+                        </ul>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">5. Prohibited Items</h2>
+                        <p className="text-lg text-gray-600 mb-6">
+                            We do not transport hazardous materials, illegal items, perishable goods, or high-value items (e.g., jewelry, cash) unless agreed in writing.
+                        </p>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">6. Termination of Services</h2>
+                        <p className="text-lg text-gray-600 mb-6">
+                            We reserve the right to terminate services if:
+                        </p>
+                        <ul className="list-disc pl-6 text-lg text-gray-600 mb-6">
+                            <li>You provide false information.</li>
+                            <li>Safe access is not provided.</li>
+                            <li>Payment is not received as agreed.</li>
+                        </ul>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">7. Governing Law</h2>
+                        <p className="text-lg text-gray-600 mb-6">
+                            These terms are governed by the laws of England and Wales. Disputes will be subject to the exclusive jurisdiction of the courts of England and Wales.
+                        </p>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">8. Changes to Terms</h2>
+                        <p className="text-lg text-gray-600 mb-6">
+                            We may update these Terms and Conditions from time to time. Changes will be posted on this page with an updated "Last Updated" date.
+                        </p>
+
+                        <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">9. Contact Us</h2>
+                        <p className="text-lg text-gray-600 mb-6">
+                            If you have questions about these Terms and Conditions, please contact us:
+                        </p>
+                        <ul className="list-none text-lg text-gray-600 mb-6">
+                            <li><strong>Email:</strong> <a href="mailto:incrediblesremovals@gmail.com" className="text-orange-600 hover:text-orange-700 transition-colors">incrediblesremovals@gmail.com</a></li>
+                            <li><strong>Phone:</strong> <a href="tel:+447415714344" className="text-orange-600 hover:text-orange-700 transition-colors">07415 714344</a></li>
+                            <li><strong>Address:</strong> Incredibles Removals, Croydon, United Kingdom</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Footer = () => (
+            <footer className="bg-gray-900 text-white py-12">
+                <div className="container mx-auto px-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                        <div>
+                            <h3 className="text-xl font-bold mb-4">Incredibles Removals</h3>
+                            <p className="text-gray-400">A reliable moving company providing residential and commercial relocation services.</p>
+                            <p className="text-gray-400 mt-2">SIC Code: 49420</p>
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+                            <ul className="space-y-2">
+                                <li><a href="index.html#home" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Home</a></li>
+                                <li><a href="index.html#services" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Services</a></li>
+                                <li><a href="index.html#about" className="text-gray-400 hover:text-white transition-colors touch-manipulation">About</a></li>
+                                <li><a href="index.html#testimonials" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Testimonials</a></li>
+                                <li><a href="index.html#contact" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Contact</a></li>
+                                <li><a href="terms.html" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Terms & Conditions</a></li>
+                                <li><a href="privacy.html" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Privacy Policy</a></li>
+                                <li><a href="cookies.html" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Cookies Policy</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-semibold mb-4">Connect With Us</h4>
+                            <div className="flex space-x-4 mb-4">
+                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                    <i className="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                    <i className="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                    <i className="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                    <i className="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
+                        <p>© {new Date().getFullYear()} Incredibles Removals. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        const App = () => (
+            <div className="font-sans antialiased text-gray-900">
+                <Navbar />
+                <TermsConditions />
+                <Footer />
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
