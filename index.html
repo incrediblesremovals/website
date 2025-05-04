@@ -1,49 +1,11 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Professional removal services in Croydon and beyond. Home, office, and country removals with care.">
     <title>Incredibles Removals - Effortless Moving Services</title>
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/45EGkqmEAL7jhE2IjA5Ypa3PiLFCQ-KBgQ1ezrdvByhjzxF0dBRceQ7xRN7uh-zN8Rdv3xIJN5HHF6Te=s265-w265-h265" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -67,6 +29,24 @@
             filter: brightness(50%);
         }
         .video-background .content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .cta-background {
+            position: relative;
+            overflow: hidden;
+            height: 100vh;
+            min-height: 600px;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://www.arrowheadgrp.com/wp-content/uploads/2023/01/AH-1.17-homeowner-inventory-BLOG.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .cta-background .content {
             position: relative;
             z-index: 1;
             height: 100%;
@@ -121,13 +101,13 @@
         .logo-slider:hover .logo-track {
             animation-play-state: paused;
         }
-        .expanded-content {
+        .expanded-content, .faq-content {
             transition: max-height 0.3s ease, opacity 0.3s ease;
             max-height: 0;
             opacity: 0;
             overflow: hidden;
         }
-        .expanded-content.open {
+        .expanded-content.open, .faq-content.open {
             max-height: 1000px;
             opacity: 1;
         }
@@ -138,66 +118,66 @@
 
     <script type="text/babel">
         const Navbar = () => {
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const menuRef = React.useRef(null);
+            const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+            const menuRef = React.useRef(null);
 
-    React.useEffect(() => {
-        const handleOutsideClick = (e) => {
-            if (isMenuOpen && menuRef.current && !menuRef.current.contains(e.target)) {
-                setIsMenuOpen(false);
-            }
-        };
-        const handleEscapeKey = (e) => {
-            if (e.key === 'Escape' && isMenuOpen) {
-                setIsMenuOpen(false);
-            }
-        };
-        document.addEventListener('click', handleOutsideClick);
-        document.addEventListener('keydown', handleEscapeKey);
-        return () => {
-            document.removeEventListener('click', handleOutsideClick);
-            document.removeEventListener('keydown', handleEscapeKey);
-        };
-    }, [isMenuOpen]);
+            React.useEffect(() => {
+                const handleOutsideClick = (e) => {
+                    if (isMenuOpen && menuRef.current && !menuRef.current.contains(e.target)) {
+                        setIsMenuOpen(false);
+                    }
+                };
+                const handleEscapeKey = (e) => {
+                    if (e.key === 'Escape' && isMenuOpen) {
+                        setIsMenuOpen(false);
+                    }
+                };
+                document.addEventListener('click', handleOutsideClick);
+                document.addEventListener('keydown', handleEscapeKey);
+                return () => {
+                    document.removeEventListener('click', handleOutsideClick);
+                    document.removeEventListener('keydown', handleEscapeKey);
+                };
+            }, [isMenuOpen]);
 
-    return (
-        <nav ref={menuRef} className="bg-white text-orange-600 p-4 sticky top-0 z-50 shadow-md">
-            <div className="container mx-auto flex justify-between items-center">
-                <div className="flex items-center">
-                    <img 
-                        src="https://lh3.googleusercontent.com/45EGkqmEAL7jhE2IjA5Ypa3PiLFCQ-KBgQ1ezrdvByhjzxF0dBRceQ7xRN7uh-zN8Rdv3xIJN5HHF6Te=s265-w265-h265" 
-                        alt="Incredibles Removals Logo" 
-                        className="h-14 w-auto"
-                    />
-                </div>
-                <ul className="hidden md:flex space-x-6">
-                    <li><a href="#home" className="hover:text-orange-800 transition-colors">Home</a></li>
-                    <li><a href="#services" className="hover:text-orange-800 transition-colors">Services</a></li>
-                    <li><a href="#about" className="hover:text-orange-800 transition-colors">About</a></li>
-                    <li><a href="#testimonials" className="hover:text-orange-800 transition-colors">Testimonials</a></li>
-                    <li><a href="#contact" className="hover:text-orange-800 transition-colors">Contact</a></li>
-                </ul>
-                <button 
-                    className="md:hidden text-orange-600 focus:outline-none"
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    aria-label="Toggle menu"
-                    aria-expanded={isMenuOpen}
-                >
-                    <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-2xl`}></i>
-                </button>
-            </div>
-            <div className={`mobile-menu bg-gray-100 md:hidden ${isMenuOpen ? 'open' : ''}`}>
-                <ul className="flex flex-col space-y-3 p-4 text-orange-600">
-                    <li><a href="#home" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
-                    <li><a href="#services" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>Services</a></li>
-                    <li><a href="#about" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
-                    <li><a href="#testimonials" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>Testimonials</a></li>
-                    <li><a href="#contact" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
-                </ul>
-            </div>
-        </nav>
-    );
-};
+            return (
+                <nav ref={menuRef} className="bg-white text-orange-600 p-4 sticky top-0 z-50 shadow-md">
+                    <div className="container mx-auto flex justify-between items-center">
+                        <div className="flex items-center">
+                            <img 
+                                src="https://lh3.googleusercontent.com/45EGkqmEAL7jhE2IjA5Ypa3PiLFCQ-KBgQ1ezrdvByhjzxF0dBRceQ7xRN7uh-zN8Rdv3xIJN5HHF6Te=s265-w265-h265" 
+                                alt="Incredibles Removals Logo" 
+                                className="h-14 w-auto"
+                            />
+                        </div>
+                        <ul className="hidden md:flex space-x-6">
+                            <li><a href="#home" className="hover:text-orange-800 transition-colors">Home</a></li>
+                            <li><a href="#services" className="hover:text-orange-800 transition-colors">Services</a></li>
+                            <li><a href="#about" className="hover:text-orange-800 transition-colors">About</a></li>
+                            <li><a href="#testimonials" className="hover:text-orange-800 transition-colors">Testimonials</a></li>
+                            <li><a href="#contact" className="hover:text-orange-800 transition-colors">Contact</a></li>
+                        </ul>
+                        <button 
+                            className="md:hidden text-orange-600 focus:outline-none"
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            aria-label="Toggle menu"
+                            aria-expanded={isMenuOpen}
+                        >
+                            <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-2xl`}></i>
+                        </button>
+                    </div>
+                    <div className={`mobile-menu bg-gray-100 md:hidden ${isMenuOpen ? 'open' : ''}`}>
+                        <ul className="flex flex-col space-y-3 p-4 text-orange-600">
+                            <li><a href="#home" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
+                            <li><a href="#services" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>Services</a></li>
+                            <li><a href="#about" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
+                            <li><a href="#testimonials" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>Testimonials</a></li>
+                            <li><a href="#contact" className="block py-2 hover:text-orange-800 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            );
+        };
 
         const Hero = () => (
             <section id="home" className="video-background text-white">
@@ -208,8 +188,17 @@
                 <div className="content container mx-auto text-center px-4">
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Moving Made Incredible</h1>
                     <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Professional removals for homes and businesses in Croydon and beyond</p>
+                </div>
+            </section>
+        );
+
+        const CallToAction = () => (
+            <section className="cta-background text-white">
+                <div className="content container mx-auto text-center px-4">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Start Your Move Today</h1>
+                    <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Schedule a video survey to receive a personalized moving plan and a precise quote, ensuring a seamless and stress-free relocation tailored to your needs.</p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <a href="#contact" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg touch-manipulation">Book a Free Quote</a>
+                        <a href="#contact" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg touch-manipulation">Book a Video Survey</a>
                         <a href="tel:+447415714344" className="bg-white hover:bg-gray-100 text-orange-600 px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg touch-manipulation">
                             <i className="fas fa-phone mr-2"></i> Call Now
                         </a>
@@ -230,14 +219,14 @@
                             {
                                 title: "Home Removals",
                                 description: "Safe and efficient moving for your household, tailored to your needs.",
-                                image: "https://static.wixstatic.com/media/ea26fd_91738f59b8cb40769316e5cd632c34d5~mv2_d_6720_4480_s_4_2.jpeg",
+                                image: "https://lh3.googleusercontent.com/p/AF1QipPO5B-VgQD_onHo4BgsaWhhyHCq9yV6KWAgNyGt=s1360-w1360-h1020",
                                 icon: "fa-home",
                                 link: "home-removals.html"
                             },
                             {
                                 title: "Prepacking & Unpacking",
                                 description: "Professional packing and unpacking to secure your items during transit.",
-                                image: "https://static.wixstatic.com/media/ea26fd_de03219395224c97b1b438f18f1295f5~mv2_d_7002_4673_s_4_2.jpeg",
+                                image: "https://lh3.googleusercontent.com/p/AF1QipPTSiANrbKcKyzALqs7iphC6NyRVsWS66FXBpRn=s1360-w1360-h1020",
                                 icon: "fa-box-open",
                                 link: "prepacking-unpacking.html"
                             },
@@ -251,7 +240,7 @@
                             {
                                 title: "Country Removals",
                                 description: "Reliable long-distance moves across the UK, with care and precision.",
-                                image: "https://static.wixstatic.com/media/ea26fd_334e6e9129254d76ae3fc847a1990777~mv2_d_5760_3103_s_4_2.jpeg",
+                                image: "https://lh3.googleusercontent.com/p/AF1QipMt1BDkdZySWE0g8ysQywVQyOj4vLOdaUB3vSUx=s1360-w1360-h1020",
                                 icon: "fa-truck",
                                 link: "country-removals.html"
                             }
@@ -287,76 +276,130 @@
 
             const blogs = [
                 {
-                    title: "Top 10 Tips for a Stress-Free Move",
-                    teaser: "Moving can be overwhelming, but with the right plan, it doesn’t have to be. Discover our expert tips to make your move smooth and stress-free.",
+                    title: "Guide to a Seamless Move",
+                    teaser: "Key steps for a stress-free move, from planning to settling in.",
                     image: "https://static.wixstatic.com/media/ea26fd_91738f59b8cb40769316e5cd632c34d5~mv2_d_6720_4480_s_4_2.jpeg",
                     expandedContent: (
                         <div>
                             <p className="text-gray-600 mb-4">
-                                Moving to a new home is an exciting milestone, but it can also be stressful without proper planning. Here are our top 10 tips to ensure a smooth relocation:
+                                Moving can be stressful, but with planning, it’s manageable. Here’s a concise guide for a smooth move.
                             </p>
+                            <h4 className="font-semibold text-gray-900 mb-2">1. Plan Early (8-12 Weeks Before)</h4>
                             <ul className="list-disc pl-6 text-gray-600 mb-4">
-                                <li><strong>Start Early:</strong> Begin planning and packing at least 6-8 weeks before your move.</li>
-                                <li><strong>Create a Checklist:</strong> Keep track of tasks like notifying utilities and updating your address.</li>
-                                <li><strong>Declutter:</strong> Donate or sell items you no longer need to reduce your load.</li>
-                                <li><strong>Pack Smart:</strong> Label boxes clearly and pack essentials separately for easy access.</li>
-                                <li><strong>Hire Professionals:</strong> Trust Incredibles Removals for safe and efficient moving services.</li>
-                                <li><strong>Protect Valuables:</strong> Use bubble wrap and sturdy boxes for fragile items.</li>
-                                <li><strong>Plan for Pets and Kids:</strong> Arrange for their care on moving day to minimize stress.</li>
-                                <li><strong>Check Access:</strong> Ensure parking and entry points are clear at both locations.</li>
-                                <li><strong>Stay Organized:</strong> Keep important documents and keys in a designated spot.</li>
-                                <li><strong>Relax and Celebrate:</strong> Once settled, take time to enjoy your new home!</li>
+                                <li>Book a moving company (like us!)</li>
+                                <li>Declutter and sort items</li>
+                                <li>Gather packing supplies</li>
                             </ul>
-                            <p className="text-gray-600">
-                                Contact us for a free quote to make your move even easier!
+                            <h4 className="font-semibold text-gray-900 mb-2">2. Prepare (4-6 Weeks Before)</h4>
+                            <ul className="list-disc pl-6 text-gray-600 mb-4">
+                                <li>Pack non-essentials</li>
+                                <li>Label boxes clearly</li>
+                                <li>Transfer utilities</li>
+                            </ul>
+                            <h4 className="font-semibold text-gray-900 mb-2">3. Final Steps (1-2 Weeks Before)</h4>
+                            <ul className="list-disc pl-6 text-gray-600 mb-4">
+                                <li>Confirm with movers</li>
+                                <li>Pack essentials box</li>
+                                <li>Arrange pet/childcare</li>
+                            </ul>
+                            <h4 className="font-semibold text-gray-900 mb-2">4. Moving Day</h4>
+                            <ul className="list-disc pl-6 text-gray-600 mb-4">
+                                <li>Do a final walkthrough</li>
+                                <li>Keep valuables with you</li>
+                                <li>Verify inventory</li>
+                            </ul>
+                            <h4 className="font-semibold text-gray-900 mb-2">5. Settle In</h4>
+                            <ul className="list-disc pl-6 text-gray-600">
+                                <li>Unpack essentials first</li>
+                                <li>Check utilities</li>
+                                <li>Explore your new area</li>
+                            </ul>
+                            <p className="text-gray-600 mt-4">
+                                Let Incredibles Removals make your move effortless. Contact us for a free quote!
                             </p>
                         </div>
                     )
                 },
                 {
-                    title: "How to Pack Fragile Items Safely",
-                    teaser: "Protect your valuables during a move with our expert packing techniques for fragile items like glassware and electronics.",
+                    title: "Packing Tips for Your Move",
+                    teaser: "Pro packing techniques to protect items and save space.",
                     image: "https://static.wixstatic.com/media/ea26fd_de03219395224c97b1b438f18f1295f5~mv2_d_7002_4673_s_4_2.jpeg",
                     expandedContent: (
                         <div>
                             <p className="text-gray-600 mb-4">
-                                Packing fragile items requires care and attention to prevent damage during transit. Follow these expert tips to keep your valuables safe:
+                                Packing well ensures your items stay safe and your move is efficient. Try these tips.
                             </p>
+                            <h4 className="font-semibold text-gray-900 mb-2">Packing Supplies</h4>
                             <ul className="list-disc pl-6 text-gray-600 mb-4">
-                                <li><strong>Use Quality Materials:</strong> Invest in sturdy boxes, bubble wrap, and packing tape.</li>
-                                <li><strong>Wrap Individually:</strong> Wrap each item in bubble wrap or packing paper to prevent scratches.</li>
-                                <li><strong>Fill Gaps:</strong> Use packing peanuts or crumpled paper to fill empty spaces in boxes.</li>
-                                <li><strong>Label Clearly:</strong> Mark boxes as “Fragile” and indicate which side is up.</li>
-                                <li><strong>Secure Electronics:</strong> Use original packaging for electronics when possible, or custom foam padding.</li>
-                                <li><strong>Double-Box Delicate Items:</strong> Place smaller boxes inside larger ones for extra protection.</li>
-                                <li><strong>Work with Professionals:</strong> Our prepacking services ensure your fragile items are handled with care.</li>
+                                <li>Boxes, tape, bubble wrap</li>
+                                <li>Markers for labeling</li>
+                                <li>Furniture blankets</li>
                             </ul>
-                            <p className="text-gray-600">
-                                Let Incredibles Removals handle your packing needs. Request a free quote today!
+                            <h4 className="font-semibold text-gray-900 mb-2">Packing Tips</h4>
+                            <ul className="list-disc pl-6 text-gray-600 mb-4">
+                                <li>Pack room by room</li>
+                                <li>Use small boxes for heavy items</li>
+                                <li>Fill gaps with padding</li>
+                            </ul>
+                            <h4 className="font-semibold text-gray-900 mb-2">Specialty Items</h4>
+                            <ul className="list-disc pl-6 text-gray-600 mb-4">
+                                <li><strong>Dishes:</strong> Wrap, pack vertically</li>
+                                <li><strong>Electronics:</strong> Use original boxes</li>
+                                <li><strong>Clothing:</strong> Wardrobe boxes</li>
+                            </ul>
+                            <h4 className="font-semibold text-gray-900 mb-2">Don’t Pack</h4>
+                            <ul className="list-disc pl-6 text-gray-600">
+                                <li>Hazardous materials</li>
+                                <li>Valuables</li>
+                                <li>Perishables</li>
+                            </ul>
+                            <p className="text-gray-600 mt-4">
+                                Our packing services ensure safety and efficiency. Contact us today!
                             </p>
                         </div>
                     )
                 },
                 {
-                    title: "Guide to Office Relocation",
-                    teaser: "Relocating your business? Learn how to minimize downtime and ensure a seamless office move with our comprehensive guide.",
+                    title: "Moving Checklist",
+                    teaser: "A concise checklist to stay organized before, during, and after your move.",
                     image: "https://static.wixstatic.com/media/ea26fd_ff7fe90edf5c465c953fb013314cb717~mv2_d_4300_2867_s_4_2.jpg",
                     expandedContent: (
                         <div>
                             <p className="text-gray-600 mb-4">
-                                Moving an office or factory requires careful planning to avoid disruptions. Our guide helps you achieve a seamless relocation:
+                                Stay on track with this streamlined moving checklist.
                             </p>
+                            <h4 className="font-semibold text-gray-900 mb-2">8 Weeks Before</h4>
                             <ul className="list-disc pl-6 text-gray-600 mb-4">
-                                <li><strong>Plan Ahead:</strong> Start planning 3-6 months in advance to coordinate logistics.</li>
-                                <li><strong>Assign a Move Manager:</strong> Designate a point person to oversee the relocation process.</li>
-                                <li><strong>Notify Stakeholders:</strong> Inform employees, clients, and suppliers about the move.</li>
-                                <li><strong>Inventory Equipment:</strong> Catalog all furniture, IT equipment, and machinery to streamline packing.</li>
-                                <li><strong>Protect Data:</strong> Back up digital files and secure sensitive documents.</li>
-                                <li><strong>Minimize Downtime:</strong> Schedule the move during off-hours or weekends.</li>
-                                <li><strong>Partner with Experts:</strong> Incredibles Removals specializes in office relocations with minimal disruption.</li>
+                                <li>Book movers</li>
+                                <li>Declutter</li>
+                                <li>Take inventory</li>
                             </ul>
-                            <p className="text-gray-600">
-                                Get started with a free quote for your office move today!
+                            <h4 className="font-semibold text-gray-900 mb-2">4 Weeks Before</h4>
+                            <ul className="list-disc pl-6 text-gray-600 mb-4">
+                                <li>Pack non-essentials</li>
+                                <li>Update address</li>
+                                <li>Transfer utilities</li>
+                            </ul>
+                            <h4 className="font-semibold text-gray-900 mb-2">2 Weeks Before</h4>
+                            <ul className="list-disc pl-6 text-gray-600 mb-4">
+                                <li>Confirm movers</li>
+                                <li>Pack essentials box</li>
+                                <li>Plan meals</li>
+                            </ul>
+                            <h4 className="font-semibold text-gray-900 mb-2">Moving Day</h4>
+                            <ul className="list-disc pl-6 text-gray-600 mb-4">
+                                <li>Final walkthrough</li>
+                                <li>Keep documents safe</li>
+                                <li>Check inventory</li>
+                            </ul>
+                            <h4 className="font-semibold text-gray-900 mb-2">After Moving</h4>
+                            <ul className="list-disc pl-6 text-gray-600">
+                                <li>Unpack essentials</li>
+                                <li>Update licenses</li>
+                                <li>Meet neighbors</li>
+                            </ul>
+                            <p className="text-gray-600 mt-4">
+                                Let Incredibles Removals simplify your move. Get a free quote now!
                             </p>
                         </div>
                     )
@@ -383,7 +426,7 @@
                                     </div>
                                     <h3 className="text-xl font-semibold mb-2 text-gray-900">{blog.title}</h3>
                                     <p className="text-gray-600 mb-4">{blog.teaser}</p>
-                                    <div className={`expanded-content ${expandedBlog === index ? 'open' : ''}`}>
+ ultimatum                                    <div className={`expanded-content ${expandedBlog === index ? 'open' : ''}`}>
                                         {blog.expandedContent}
                                     </div>
                                     <button 
@@ -406,7 +449,7 @@
                     <div className="flex flex-col lg:flex-row items-center gap-12">
                         <div className="lg:w-1/2">
                             <img 
-                                src="https://static.wixstatic.com/media/ea26fd_91738f59b8cb40769316e5cd632c34d5~mv2_d_6720_4480_s_4_2.jpeg" 
+                                src="https://lh3.googleusercontent.com/p/AF1QipMJ8u7MeDR3irUCEeRyxtrkHOvbHxnWoGTDaJgA=s1360-w1360-h1020" 
                                 alt="Incredibles Removals Team moving a household" 
                                 className="rounded-lg shadow-xl w-full h-auto"
                                 loading="lazy"
@@ -463,11 +506,6 @@
                                     loading="lazy"
                                 />
                                 <img 
-                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Habitat_Logo.svg/2560px-Habitat_Logo.svg.png" 
-                                    alt="Habitat Logo" 
-                                    loading="lazy"
-                                />
-                                <img 
                                     src="https://www.bgf.co.uk/wp-content/uploads/2024/02/furniture-village-logo-large.png" 
                                     alt="Furniture Village Logo" 
                                     loading="lazy"
@@ -480,11 +518,6 @@
                                 <img 
                                     src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/DFS_Furniture_logo.svg/1200px-DFS_Furniture_logo.svg.png" 
                                     alt="DFS_Furniture Logo" 
-                                    loading="lazy"
-                                />
-                                <img 
-                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Habitat_Logo.svg/2560px-Habitat_Logo.svg.png" 
-                                    alt="Habitat Logo" 
                                     loading="lazy"
                                 />
                             </div>
@@ -553,20 +586,15 @@
                 name: '',
                 email: '',
                 phone: '',
-                pickupCountry: '',
-                pickupAddress: '',
-                pickupCity: '',
-                pickupPostalCode: '',
-                dropoffCountry: '',
-                dropoffAddress: '',
-                dropoffCity: '',
-                dropoffPostalCode: '',
-                message: '',
-                moveDate: ''
+                moveDate: '',
+                movingFrom: '',
+                movingTo: '',
+                message: ''
             });
             const [isSubmitting, setIsSubmitting] = React.useState(false);
             const [submitSuccess, setSubmitSuccess] = React.useState(false);
             const [submitError, setSubmitError] = React.useState('');
+            const [expandedFaq, setExpandedFaq] = React.useState(null);
 
             const handleChange = (e) => {
                 const { name, value } = e.target;
@@ -600,16 +628,10 @@
                         name: '',
                         email: '',
                         phone: '',
-                        pickupCountry: '',
-                        pickupAddress: '',
-                        pickupCity: '',
-                        pickupPostalCode: '',
-                        dropoffCountry: '',
-                        dropoffAddress: '',
-                        dropoffCity: '',
-                        dropoffPostalCode: '',
-                        message: '',
-                        moveDate: ''
+                        moveDate: '',
+                        movingFrom: '',
+                        movingTo: '',
+                        message: ''
                     });
                 } catch (error) {
                     setSubmitError('There was an error submitting your form. Please try again or contact us directly.');
@@ -617,6 +639,37 @@
                     setIsSubmitting(false);
                 }
             };
+
+            const toggleFaq = (index) => {
+                setExpandedFaq(expandedFaq === index ? null : index);
+            };
+
+            const faqs = [
+                {
+                    question: "Should I hire the help of professional moving companies or do the moving?",
+                    answer: "Hiring professional movers, like Incredibles Removals, can save you time, reduce stress, and minimize the risk of damage to your belongings. Professionals have the expertise, equipment, and insurance to handle your move efficiently. DIY moving may save money upfront but can be physically demanding and risky without proper tools or experience. Consider your budget, the complexity of the move, and your physical capabilities when deciding."
+                },
+                {
+                    question: "Do I need an estimate for my moving needs?",
+                    answer: "Yes, getting an estimate is highly recommended. An accurate estimate helps you budget for your move and avoids unexpected costs. At Incredibles Removals, we offer free, no-obligation quotes based on a video survey or detailed information about your move, ensuring transparency and clarity."
+                },
+                {
+                    question: "How far in advance should I schedule my move?",
+                    answer: "We recommend scheduling your move at least 4-6 weeks in advance, especially during peak seasons (summer or end-of-month periods). Booking early ensures availability and gives you ample time to plan, pack, and coordinate logistics. For last-minute moves, contact us, and we’ll do our best to accommodate your needs."
+                },
+                {
+                    question: "Will the movers place all my things in the respective rooms to which they belong?",
+                    answer: "Yes, our team at Incredibles Removals will place your belongings in the rooms you specify, provided you clearly label boxes or communicate your preferences. We aim to make your move as seamless as possible, including setting up items in their designated spaces, though some restrictions may apply for heavy or specialty items."
+                },
+                {
+                    question: "What items should I pack myself before the move?",
+                    answer: "You should pack personal, valuable, or sensitive items yourself, such as jewelry, important documents, medications, and electronics. These items are best kept with you during the move for security and peace of mind. Our prepacking services can handle the rest, ensuring everything is packed safely and efficiently."
+                },
+                {
+                    question: "Are my belongings insured during the move?",
+                    answer: "Yes, Incredibles Removals is fully insured, providing coverage for your belongings during transit. Our insurance protects against damage or loss, giving you confidence in our services. We recommend reviewing your homeowner’s or renter’s insurance for additional coverage options and discussing any high-value items with us in advance."
+                }
+            ];
 
             return (
                 <section id="contact" className="py-16 bg-white">
@@ -626,10 +679,10 @@
                                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get Your Free Quote</h2>
                                 <p className="text-lg text-gray-600">Fill out the form below and we'll get back to you within 24 hours</p>
                             </div>
-                            <div className="bg-gray-50 rounded-xl shadow-md p-8">
+                            <div className="bg-gray-50 rounded-xl shadow-md p-8 mb-12">
                                 {submitSuccess ? (
                                     <div className="text-center py-8">
-                                        <div className=" bg-green-100 text-green-800 p-4 rounded-lg inline-block mb-6">
+                                        <div className="bg-green-100 text-green-800 p-4 rounded-lg inline-block mb-6">
                                             <i className="fas fa-check-circle text-4xl"></i>
                                         </div>
                                         <h3 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h3>
@@ -695,115 +748,29 @@
                                                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
                                                 />
                                             </div>
-                                        </div>
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Pick-up Location</h3>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div>
-                                                    <label htmlFor="pickupCountry" className="block text-sm font-medium text-gray-700 mb-1">Country/Region</label>
-                                                    <select
-                                                        id="pickupCountry"
-                                                        name="pickupCountry"
-                                                        value={formData.pickupCountry}
-                                                        onChange={handleChange}
-                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
-                                                    >
-                                                        <option value="">Select a country/region</option>
-                                                        <option value="United Kingdom">United Kingdom</option>
-                                                        <option value="Ireland">Ireland</option>
-                                                        <option value="France">France</option>
-                                                        <option value="Germany">Germany</option>
-                                                        <option value="Other">Other</option>
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <label htmlFor="pickupAddress" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                                                    <input
-                                                        type="text"
-                                                        id="pickupAddress"
-                                                        name="pickupAddress"
-                                                        value={formData.pickupAddress}
-                                                        onChange={handleChange}
-                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label htmlFor="pickupCity" className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                                                    <input
-                                                        type="text"
-                                                        id="pickupCity"
-                                                        name="pickupCity"
-                                                        value={formData.pickupCity}
-                                                        onChange={handleChange}
-                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label htmlFor="pickupPostalCode" className="block text-sm font-medium text-gray-700 mb-1">ZIP/Postal Code</label>
-                                                    <input
-                                                        type="text"
-                                                        id="pickupPostalCode"
-                                                        name="pickupPostalCode"
-                                                        value={formData.pickupPostalCode}
-                                                        onChange={handleChange}
-                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
-                                                    />
-                                                </div>
+                                            <div>
+                                                <label htmlFor="movingFrom" className="block text-sm font-medium text-gray-700 mb-1">Moving From</label>
+                                                <input
+                                                    type="text"
+                                                    id="movingFrom"
+                                                    name="movingFrom"
+                                                    value={formData.movingFrom}
+                                                    onChange={handleChange}
+                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
+                                                    placeholder="Enter starting location"
+                                                />
                                             </div>
-                                        </div>
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Drop-off Location</h3>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div>
-                                                    <label htmlFor="dropoffCountry" className="block text-sm font-medium text-gray-700 mb-1">Country/Region</label>
-                                                    <select
-                                                        id="dropoffCountry"
-                                                        name="dropoffCountry"
-                                                        value={formData.dropoffCountry}
-                                                        onChange={handleChange}
-                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
-                                                    >
-                                                        <option value="">Select a country/region</option>
-                                                        <option value="United Kingdom">United Kingdom</option>
-                                                        <option value="Ireland">Ireland</option>
-                                                        <option value="France">France</option>
-                                                        <option value="Germany">Germany</option>
-                                                        <option value="Other">Other</option>
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <label htmlFor="dropoffAddress" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                                                    <input
-                                                        type="text"
-                                                        id="dropoffAddress"
-                                                        name="dropoffAddress"
-                                                        value={formData.dropoffAddress}
-                                                        onChange={handleChange}
-                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label htmlFor="dropoffCity" className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                                                    <input
-                                                        type="text"
-                                                        id="dropoffCity"
-                                                        name="dropoffCity"
-                                                        value={formData.dropoffCity}
-                                                        onChange={handleChange}
-                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label htmlFor="dropoffPostalCode" className="block text-sm font-medium text-gray-700 mb-1">ZIP/Postal Code</label>
-                                                    <input
-                                                        type="text"
-                                                        id="dropoffPostalCode"
-                                                        name="dropoffPostalCode"
-                                                        value={formData.dropoffPostalCode}
-                                                        onChange={handleChange}
-                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
-                                                    />
-                                                </div>
+                                            <div>
+                                                <label htmlFor="movingTo" className="block text-sm font-medium text-gray-700 mb-1">Moving To</label>
+                                                <input
+                                                    type="text"
+                                                    id="movingTo"
+                                                    name="movingTo"
+                                                    value={formData.movingTo}
+                                                    onChange={handleChange}
+                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 touch-manipulation"
+                                                    placeholder="Enter destination location"
+                                                />
                                             </div>
                                         </div>
                                         <div>
@@ -836,6 +803,28 @@
                                         </div>
                                     </form>
                                 )}
+                            </div>
+                            <div className="mb-12">
+                                <div className="text-center mb-8">
+                                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">Find answers to common questions about our removal services</p>
+                                </div>
+                                <div className="space-y-4">
+                                    {faqs.map((faq, index) => (
+                                        <div key={index} className="rounded-lg shadow-md">
+                                            <button
+                                                onClick={() => toggleFaq(index)}
+                                                className="w-full text-left flex justify-between items-center bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg touch-manipulation"
+                                            >
+                                                <span>{faq.question}</span>
+                                                <i className={`fas ${expandedFaq === index ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                                            </button>
+                                            <div className={`faq-content bg-white ${expandedFaq === index ? 'open' : ''} px-8 py-4 text-gray-600`}>
+                                                <p>{faq.answer}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                                 <div className="bg-orange-50 p-6 rounded-lg">
@@ -891,7 +880,7 @@
                                 <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
                                     <i className="fab fa-twitter"></i>
                                 </a>
-                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                <a href="https://www.instagram.com/incrediblesremovals/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
                                     <i className="fab fa-instagram"></i>
                                 </a>
                                 <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
@@ -911,6 +900,7 @@
             <div className="font-sans antialiased text-gray-900">
                 <Navbar />
                 <Hero />
+                <CallToAction />
                 <Services />
                 <Blogs />
                 <About />
@@ -964,8 +954,8 @@
             return gk_fileData[filename] || "";
         }
     </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'932f57436b07adb2',t:'MTc0NTA5NjUyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93335d882b9a12d9',t:'MTc0NTEzODcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93346eba2d12bcb9',t:'MTc0NTE0OTkxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93a2c4364c974525',t:'MTc0NjMwNjg1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93a6b2526876add1',t:'MTc0NjM0ODA2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93a9e0796fca180f',t:'MTc0NjM4MTQwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
